@@ -68,6 +68,14 @@ def create_app():
         """Serve saved audio recordings for frontend playback."""
         return send_from_directory(UPLOAD_DIR, filename)
 
+    # ── Root Route ───────────────────────────────────────────────────────────
+    @app.route("/", methods=["GET"])
+    def index():
+        return jsonify({
+            "message": "FeelSafe API is Live",
+            "status": "active"
+        }), 200
+
     # ── Health Check ─────────────────────────────────────────────────────────
     @app.route("/health", methods=["GET"])
     def health_check():

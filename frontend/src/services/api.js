@@ -2,7 +2,7 @@
 // Complete FeelSafe API service layer — all calls go through here.
 
 // Backend URL — update this when your Wi-Fi IP changes
-const API_BASE = 'https://feelsafe-backend.onrender.com';
+const API_BASE = 'http://10.72.26.190:5000';
 
 async function apiCall(endpoint, options = {}, fallback = null) {
   try {
