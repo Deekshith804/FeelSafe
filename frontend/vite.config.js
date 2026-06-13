@@ -10,7 +10,7 @@ export default defineConfig({
   ],
   define: {
     // Inject backend URL at build time — change this when IP changes
-    __API_BASE__: JSON.stringify(process.env.VITE_API_BASE || 'http://10.72.26.190:5000'),
+    __API_BASE__: JSON.stringify(process.env.VITE_API_BASE || 'https://hackathon-project-w4aa.onrender.com'),
   },
   server: {
     host: true,   // listen on 0.0.0.0 so mobile devices can reach this dev server

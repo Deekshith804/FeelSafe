@@ -13,20 +13,31 @@ import MobileEmergencyOverlay from './mobile/components/MobileEmergencyOverlay';
 function App() {
   // ── Backend connectivity test on startup ──────────────────────────────────
   useEffect(() => {
-    checkHealth()
-      .then((data) => {
-        if (data?.status === 'ok') {
-          console.log('[FeelSafe] ✅ Backend connected:', data);
-          alert('Backend Connected successfully!');
-        } else {
-          console.warn('[FeelSafe] ⚠️ Backend responded but status unexpected:', data);
-          alert('Backend responded with unexpected status.');
-        }
-      })
-      .catch((err) => {
-        console.warn('[FeelSafe] ❌ Backend unreachable at startup:', err.message);
-        alert('Backend Unreachable: ' + err.message);
-      });
+    const BACKEND = import.meta.env.VITE_API_BASE || 'https://hackathon-project-w4aa.onrender.com';
+
+    // Render free-tier instances spin down after inactivity — retry once after 8 s
+    const tryConnect = (attempt = 1) => {
+      checkHealth()
+        .then((data) => {
+          if (data?.status === 'ok' || data?.status === 'active') {
+            console.log('[FeelSafe] ✅ Backend connected:', data);
+          } else {
+            console.warn('[FeelSafe] ⚠️ Backend responded but status unexpected:', data?.status);
+          }
+        })
+        .catch((err) => {
+          if (attempt < 2) {
+            console.warn(`[FeelSafe] ⏳ Backend cold-starting, retrying in 8 s… (${err.message})`);
+            setTimeout(() => tryConnect(2), 8000);
+          } else {
+            console.error(`[FeelSafe] ❌ Backend unreachable: ${err.message}\nURL: ${BACKEND}/health`);
+            // Only alert on second failure so cold-start is silent to the user
+            alert(`FeelSafe backend is temporarily unavailable.\n\nURL: ${BACKEND}\nError: ${err.message}\n\nTry again in a few seconds.`);
+          }
+        });
+    };
+
+    tryConnect();
   }, []);
 
   return (

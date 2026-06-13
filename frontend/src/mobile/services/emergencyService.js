@@ -13,7 +13,7 @@ const EMERGENCY_CONFIG = {
   userName: 'FeelSafe User',
   primaryContactPhone: '+919110614561',
   whatsappContacts: ['+919110614561'],
-  backendBase: 'http://10.72.26.190:5000',
+  backendBase: import.meta.env.VITE_API_BASE || 'https://hackathon-project-w4aa.onrender.com',
   userId: 1,
 };
 
